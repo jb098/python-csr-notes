@@ -14,6 +14,7 @@ setup(
         'Flask',
         'Flask-SQLAlchemy',
         'Flask-Login',
+        'Flask-WTF',
     ],
     include_package_data=True,
     description='Python program to allow tracking of notes against customers',
