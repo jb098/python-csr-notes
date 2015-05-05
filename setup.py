@@ -12,7 +12,7 @@ setup(
     packages=['csr'],
     install_requires=[
         'Flask',
-        'sqlalchemy',
+        'Flask-SQLAlchemy',
         'Flask-Login',
     ],
     include_package_data=True,
