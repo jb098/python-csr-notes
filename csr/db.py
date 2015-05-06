@@ -4,7 +4,6 @@ https://realpython.com/blog/python/using-flask-login-for-user-management-with-fl
 """
 from app import db
 
-
 class Note(db.Model):
     """
     Model for a notes table

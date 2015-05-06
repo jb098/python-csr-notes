@@ -5,10 +5,12 @@ https://flask-login.readthedocs.org/en/latest/
 User loader code also from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
+from flask import Blueprint
 from flask_login import login_user
-
 from db import User, Note
 from forms import LoginForm
+
+pages = Blueprint('pages', __name__, static_folder="static")
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -19,7 +21,12 @@ def user_loader(user_id):
     return User.query.get(user_id)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@pages.route('/')
+def index():
+    return redirect(url_for('login'))
+
+
+@pages.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -29,18 +36,18 @@ def login():
     return flask.render_template('login.html', form=form)
 
 
-@app.route('/notes', methods=['GET', 'POST'])
+@pages.route('/notes', methods=['GET', 'POST'])
 @login_required
 def notes():
     if request.method == 'GET':
         notes = {}
-        return render_template('notes.html' notes=notes)
+        return render_template('notes.html', notes=notes)
     elif request.method == 'POST':
         pass
 
 
 
-@app.route("/logout", methods=["GET"])
+@pages.route("/logout", methods=["GET"])
 @login_required
 def logout():
     """Logout the current user."""
