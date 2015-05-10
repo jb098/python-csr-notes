@@ -3,7 +3,7 @@ Python program to allow tracking of notes against customers
 
 # How To Install
 
-Run 'python setup.py install'
+Run 'python setup.py install'. If this fails, run 'pip install <packagename>' for all packages listed in setup.py. setup.py untested due to timing out hitting pypi.
 
 # How To Run
 
