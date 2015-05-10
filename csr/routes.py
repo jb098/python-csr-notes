@@ -7,7 +7,7 @@ https://realpython.com/blog/python/using-flask-login-for-user-management-with-fl
 """
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_user, LoginManager, login_required
-from db import User, Note, Customer
+from db import User, Note, Customer, add_record
 from forms import LoginForm
 
 pages = Blueprint('pages', __name__, static_folder="static")
@@ -30,6 +30,9 @@ def login():
         login_user(user)
         flash('Logged in successfully.')
         return flask.redirect(url_for('.customer'))
+    else:
+        print 'Login Failed' #DEBUG
+        flash('Login failed')
     return render_template('login.html', form=form)
 
 
@@ -81,7 +84,6 @@ def register():
         user = User(
             request.form['email'],
             request.form['password'])
-        db.session.add(user)
-        db.session.commit()
+        add_record(user)
         flash('User successfully registered')
     return redirect(url_for('.login'))

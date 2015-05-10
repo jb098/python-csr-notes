@@ -41,6 +41,10 @@ class User(db.Model):
     notes = db.relationship('Note', backref='user',
                                 lazy='dynamic')
 
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
     def is_active(self):
         """True, as all users are active."""
         return True
@@ -56,3 +60,7 @@ class User(db.Model):
     def is_anonymous(self):
         """False, as anonymous users aren't supported."""
         return False
+
+def add_record(record):
+    db.session.add(record)
+    db.session.commit()
