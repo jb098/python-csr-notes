@@ -6,4 +6,5 @@ Python program to allow tracking of notes against customers
 # How To Run
 
 # Current bugs/known issues
-*Unecrypted passwords, use bcrypt
+
+1. Unecrypted passwords, use bcrypt
