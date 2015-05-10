@@ -5,12 +5,14 @@ https://flask-login.readthedocs.org/en/latest/
 User loader code also from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
-from flask import Blueprint
-from flask_login import login_user
+from flask import Blueprint, redirect, url_for, render_template
+from flask_login import login_user, LoginManager, login_required
 from db import User, Note
 from forms import LoginForm
 
 pages = Blueprint('pages', __name__, static_folder="static")
+
+login_manager = LoginManager()
 
 @login_manager.user_loader
 def user_loader(user_id):
@@ -33,7 +35,7 @@ def login():
         login_user(user)
         flask.flash('Logged in successfully.')
         return flask.redirect(flask.url_for('notes'))
-    return flask.render_template('login.html', form=form)
+    return render_template('login.html', form=form)
 
 
 @pages.route('/notes', methods=['GET', 'POST'])

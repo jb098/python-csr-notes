@@ -2,7 +2,9 @@
 Database controller for logins. User model code from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
-from app import db
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 class Note(db.Model):
     """
