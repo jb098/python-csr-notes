@@ -5,7 +5,7 @@ https://flask-login.readthedocs.org/en/latest/
 User loader code also from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
-import time
+import datetime
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from db import User, Note, Customer, add_record
@@ -73,16 +73,17 @@ def add_customer():
             request.form['forename'],
             request.form['surname'])
         add_record(customer)
-        redirect(url_for('.customer'))
+        return redirect(url_for('.customer'))
 
 
 @pages.route('/notes/<int:cocoon_id>', methods=['GET', 'POST'])
 @login_required
 def notes(cocoon_id):
     if request.method == 'GET':
-        customer_notes = Note.query.filter_by(customer_id=cocoon_id)
+        customer_notes = Note.query.filter_by(
+            customer_id=cocoon_id).order_by(Note.timestamp.desc())
         customer_details = Customer.query.filter_by(
-            customer_id=cocoon_id).first()
+            cocoon_id=cocoon_id).first()
         form = NotesForm()
         return render_template(
             'notes.html',
@@ -94,9 +95,9 @@ def notes(cocoon_id):
             request.form['note'],
             current_user.email,
             cocoon_id,
-            int(time.time()))
+            datetime.datetime.now())
         add_record(note)
-        return redirect(url_for('.notes', cocoon_id=request.form['search']))
+        return redirect(url_for('.notes', cocoon_id=cocoon_id))
 
 
 

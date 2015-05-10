@@ -1,13 +1,13 @@
 from flask_wtf import Form
 from db import db
-from wtforms import TextField, PasswordField, validators
+from wtforms import TextField, PasswordField, validators, TextAreaField
 
 class LoginForm(Form):
     email = TextField('Email', [validators.Required()])
     password = PasswordField('Password', [validators.Required()])
 
 class NotesForm(Form):
-    note = TextField('Note')
+    note = TextAreaField('Note')
 
 class SearchForm(Form):
     search = TextField('Cocoon ID')

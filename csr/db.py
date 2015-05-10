@@ -15,6 +15,12 @@ class Customer(db.Model):
     notes = db.relationship('Note', backref='customer',
                                 lazy='dynamic')
 
+    def __init__(self, cocoon_id, title, first_name, last_name):
+        self.cocoon_id = cocoon_id
+        self.title = title
+        self.first_name = first_name
+        self.last_name = last_name
+
 
 class Note(db.Model):
     """
@@ -26,6 +32,13 @@ class Note(db.Model):
     user_email = db.Column(db.String, db.ForeignKey('user.email'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.cocoon_id'))
     timestamp = db.Column(db.DateTime)
+
+    def __init__(self, note_text, user_email, customer_id, timestamp):
+        self.note_text = note_text
+        self.user_email = user_email
+        self.customer_id = customer_id
+        self.timestamp = timestamp
+
 
 
 class User(db.Model):
