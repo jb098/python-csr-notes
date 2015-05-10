@@ -6,6 +6,14 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+class Customer(db.Model):
+    __tablename__ = 'customer'
+    cocoon_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    first_name = db.Column(db.String)
+    last_name = db.Column(db.String)
+
+
 class Note(db.Model):
     """
     Model for a notes table
