@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Add Customer</h2>
+<form method="POST" action="/add_customer">
+    <div>{{ form.cocoon_ID.label }}: {{ form.cocoon_ID() }}</div>
+    <div>{{ form.title.label }}: {{ form.title() }}</div>
+    <div>{{ form.forename.label }}: {{ form.forename() }}</div>
+    <div>{{ form.surname.label }}: {{ form.surname() }}</div>
+    <input type="submit" value="Submit">
+</form>
+{% endblock %}

@@ -5,6 +5,7 @@ https://flask-login.readthedocs.org/en/latest/
 User loader code also from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
+import time
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from db import User, Note, Customer, add_record
@@ -56,8 +57,7 @@ def customer():
         form = SearchForm()
         return render_template('customer.html', form=form)
     elif request.method ==  'POST':
-        #some_query(request.form['search'])
-        pass
+        return redirect(url_for('.notes', cocoon_id=request.form['search']))
 
 
 @pages.route('/add_customer', methods=['GET', 'POST'])
@@ -67,17 +67,37 @@ def add_customer():
         form = CustomerForm()
         return render_template('add_customer.html', form=form)
     elif request.method ==  'POST':
+        customer = Customer(
+            request.form['cocoon_ID'],
+            request.form['title'],
+            request.form['forename'],
+            request.form['surname'])
+        add_record(customer)
         redirect(url_for('.customer'))
 
 
-@pages.route('/notes', methods=['GET', 'POST'])
+@pages.route('/notes/<int:cocoon_id>', methods=['GET', 'POST'])
 @login_required
-def notes():
+def notes(cocoon_id):
     if request.method == 'GET':
-        notes = {}
-        return render_template('notes.html', notes=notes)
+        customer_notes = Note.query.filter_by(customer_id=cocoon_id)
+        customer_details = Customer.query.filter_by(
+            customer_id=cocoon_id).first()
+        form = NotesForm()
+        return render_template(
+            'notes.html',
+            form=form,
+            notes=customer_notes,
+            customer=customer_details)
     elif request.method == 'POST':
-        pass
+        note = Note(
+            request.form['note'],
+            current_user.email,
+            cocoon_id,
+            int(time.time()))
+        add_record(note)
+        return redirect(url_for('.notes', cocoon_id=request.form['search']))
+
 
 
 @pages.route("/logout", methods=["GET"])

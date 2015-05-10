@@ -12,6 +12,8 @@ class Customer(db.Model):
     title = db.Column(db.String)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
+    notes = db.relationship('Note', backref='customer',
+                                lazy='dynamic')
 
 
 class Note(db.Model):
@@ -19,11 +21,11 @@ class Note(db.Model):
     Model for a notes table
     """
     __tablename__ = 'notes'
-    note_id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     note_text = db.Column(db.Text)
     user_email = db.Column(db.String, db.ForeignKey('user.email'))
+    customer_id = db.Column(db.Integer, db.ForeignKey('customer.cocoon_id'))
     timestamp = db.Column(db.DateTime)
-    deleted = db.Column(db.Boolean, default=False)
 
 
 class User(db.Model):
