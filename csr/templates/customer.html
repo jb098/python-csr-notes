@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>Customer Search</h2>
+<form method="POST" action="/customer">
+    <div>{{ form.search.label }}: {{ form.search() }}</div>
+    <input type="submit" value="Search">
+</form>
+
+</br>
+<a href="/add_customer">Register New Customer</a>
+{% endblock %}

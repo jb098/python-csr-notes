@@ -6,9 +6,10 @@ User loader code also from
 https://realpython.com/blog/python/using-flask-login-for-user-management-with-flask/
 """
 from flask import Blueprint, redirect, url_for, render_template, flash, request
-from flask_login import login_user, LoginManager, login_required
+from flask_login import login_user, LoginManager, login_required, current_user, logout_user
 from db import User, Note, Customer, add_record
-from forms import LoginForm
+from forms import LoginForm, CustomerForm, NotesForm, SearchForm
+
 
 pages = Blueprint('pages', __name__, static_folder="static")
 
@@ -27,11 +28,18 @@ def user_loader(user_id):
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        login_user(user)
+        user = User.query.filter_by(
+            email=request.form['email'],
+            password=request.form['password']).first()
+        if user is None:
+            flash('Username or Password is invalid' , 'error')
+            return redirect(url_for('.login'))
+        login_user(user, remember=True)
+        user.authenticated = True # login_user appears to be failing, workaround
+        add_record(user)
         flash('Logged in successfully.')
-        return flask.redirect(url_for('.customer'))
+        return redirect(url_for('.customer'))
     else:
-        print 'Login Failed' #DEBUG
         flash('Login failed')
     return render_template('login.html', form=form)
 
@@ -45,10 +53,21 @@ def index():
 @login_required
 def customer():
     if request.method == 'GET':
-        render_template('customer.html')
+        form = SearchForm()
+        return render_template('customer.html', form=form)
     elif request.method ==  'POST':
         #some_query(request.form['search'])
         pass
+
+
+@pages.route('/add_customer', methods=['GET', 'POST'])
+@login_required
+def add_customer():
+    if request.method == 'GET':
+        form = CustomerForm()
+        return render_template('add_customer.html', form=form)
+    elif request.method ==  'POST':
+        redirect(url_for('.customer'))
 
 
 @pages.route('/notes', methods=['GET', 'POST'])
@@ -67,8 +86,7 @@ def logout():
     """Logout the current user."""
     user = current_user
     user.authenticated = False
-    db.session.add(user)
-    db.session.commit()
+    add_record(user)
     logout_user()
     form = LoginForm()
     flash('Logged out successfully.')
