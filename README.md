@@ -3,6 +3,8 @@ Python program to allow tracking of notes against customers
 
 # How To Install
 
+Run 'python setup.py install'
+
 # How To Run
 
 Run 'python app.py' in csr folder. Serves on port 8080.
